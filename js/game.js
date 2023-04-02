@@ -4,8 +4,8 @@ export default class Game {
   level = 0
   playfield = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -56,13 +56,34 @@ export default class Game {
 
     if (this.isPieceOutOfBounds()) {
       this.activePiece.y -= 1
+      this.lockPiece()
     }
   }
 
   isPieceOutOfBounds() {
-    const playfield = this.playfield
-    const { y, x } = this.activePiece
+    const { y: pieceY, x: pieceX, blocks } = this.activePiece
 
-    return playfield[y] === undefined || playfield[y][x] === undefined
+    for (let y = 0; y < blocks.length; y++) {
+      for (let x = 0; x < blocks[y].length; x++) {
+        if (blocks[y][x] && 
+          (this.playfield[pieceY + y] === undefined || this.playfield[pieceY + y][pieceX + x] === undefined)) 
+          {
+          return true
+        }
+      }
+    }
+    return false
+  } 
+
+  lockPiece() {
+    const { y: pieceY, x: pieceX, blocks } = this.activePiece
+
+    for (let y = 0; y < blocks.length; y++) {
+      for (let x = 0; x < blocks[y].length; x++) {
+          if(blocks[y][x]) {
+          this.playfield[pieceY + y][pieceX + x] = blocks[y][x]
+        }
+      }
+    }
   }
 }
