@@ -34,27 +34,10 @@ export default class Game {
 
     rotationIndex: 0,
     rotations: [
-      [
         [0, 1, 0],
         [1, 1, 1],
-        [0, 0, 0],
+        [0, 0, 0]
       ],
-      [
-        [0, 1, 0],
-        [0, 1, 1],
-        [0, 1, 0]
-      ],
-      [
-        [0, 0, 0],
-        [1, 1, 1],
-        [0, 1, 0],
-      ],
-      [
-        [0, 1, 0],
-        [1, 1, 0],
-        [0, 1, 0]
-      ],
-    ]
   }
 
   movePieceLeft() {
@@ -83,7 +66,11 @@ export default class Game {
   }
 
   rotatePiece() {
-    this.activePiece.rotationIndex = (this.activePiece.rotationIndex + 1) % 4
+    this.activePiece.rotationIndex = this.activePiece.rotationIndex < 3 ? this.activePiece.rotationIndex + 1 : 0
+
+    if (this.hasCollision()) {
+      this.activePiece.rotationIndex = this.activePiece.rotationIndex > 0 ? this.activePiece.rotationIndex - 1 : 3
+    }
     return this.activePiece.blocks
   }
 
