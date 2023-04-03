@@ -2,42 +2,51 @@ export default class Game {
   score = 0
   lines = 0
   level = 0
-  playfield = [
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]
-
+  playfield = this.createPlayfield()
   activePiece = {
     x: 0,
     y: 0,
-    get blocks() {
-      return this.rotations[this.rotationIndex]
-    },
+    blocks: [
+      [0, 1, 0],
+      [1, 1, 1],
+      [0, 0, 0]
+    ],
+  }
 
-    rotationIndex: 0,
-    rotations: [
-        [0, 1, 0],
-        [1, 1, 1],
-        [0, 0, 0]
-      ],
+  getState() {
+    const playfield = this.createPlayfield()
+
+    for (let y = 0; y < this.playfield.length; y++) {
+        playfield[y] = []
+
+      for (let x = 0; x < this.playfield[y].length; x++) {
+          playfield[y][x] = this.playfield[y][x]
+      }
+  }
+    for (let y = 0; y < this.activePiece.blocks.length; y++) {
+        for (let x = 0; x < this.activePiece.blocks[y].length; x++) {
+          if (this.activePiece.blocks[y][x]) {
+            playfield[this.activePiece.y + y][this.activePiece.x + x] = this.activePiece.blocks[y][x]
+          }
+        }
+    }
+    return {
+      playfield
+    }
+  }
+
+  createPlayfield() {
+    const playfield = []
+
+    for (let y = 0; y < 20; y++) {
+        playfield[y] = []
+
+        for (let x = 0; x < 10; x++) {
+          playfield[y][x] = 0
+          
+        }
+    }
+    return playfield
   }
 
   movePieceLeft() {
