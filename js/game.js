@@ -28,11 +28,33 @@ export default class Game {
   activePiece = {
     x: 0,
     y: 0,
-    blocks: [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 0, 0],
-    ],
+    get blocks() {
+      return this.rotations[this.rotationIndex]
+    },
+
+    rotationIndex: 0,
+    rotations: [
+      [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0]
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0]
+      ],
+    ]
   }
 
   movePieceLeft() {
@@ -58,6 +80,11 @@ export default class Game {
       this.activePiece.y -= 1
       this.lockPiece()
     }
+  }
+
+  rotatePiece() {
+    this.activePiece.rotationIndex = (this.activePiece.rotationIndex + 1) % 4
+    return this.activePiece.blocks
   }
 
   hasCollision() {
