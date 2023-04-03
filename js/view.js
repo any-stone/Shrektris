@@ -15,9 +15,16 @@ export default class View {
     this.element.appendChild(this.canvas)
   }
 
-  renderPlayfield({playfield}) {
-  this.context.clearRect(0, 0, this.width, this.height)
+  render({playfield}) {
+  this.clearScreen()
+  this.renderPlayfield(playfield)
+  }
 
+  clearScreen() {
+    this.context.clearRect(0, 0, this.width, this.height)
+  }
+  
+  renderPlayfield(playfield) {
     for (let y = 0; y < playfield.length; y++) {
       const line = playfield[y];
 
@@ -32,7 +39,6 @@ export default class View {
             this.context.fillRect(x * this.blockWidth, y * this.blockHeight, this.blockWidth, this.blockHeight)
         }
       }
-      
     }
   }
 }
