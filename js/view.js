@@ -15,16 +15,17 @@ export default class View {
     this.element.appendChild(this.canvas)
   }
 
-  render({ playfield }) {
+  render(state) {
     this.clearScreen()
-    this.renderPlayfield(playfield)
+    this.renderPlayfield(state)
+    this.renderPanel(state)
   }
 
   clearScreen() {
     this.context.clearRect(0, 0, this.width, this.height);
   }
 
-  renderPlayfield(playfield) {
+  renderPlayfield({ playfield }) {
     for (let y = 0; y < playfield.length; y++) {
       const line = playfield[y];
 
@@ -37,6 +38,16 @@ export default class View {
       }
     }
   }
+
+  renderPanel({ level, score, lines, nextPiece }) {
+    this.context.textAlign = 'start'
+    this.context.textBaseline = 'top'
+    this.context.fillStyle = 'white'
+    this.context.font = '14px', "Press Start 2P"
+
+    this.context.fillText(`Level: ${level}`, 0, 0);
+  }
+
   renderBlock(x, y, width, height, color) {
     this.context.fillStyle = color
     this.context.strokeStyle = "black"
