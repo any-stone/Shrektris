@@ -39,7 +39,6 @@ export default class View {
             this.context.fillRect(x * this.blockWidth, y * this.blockHeight, this.blockWidth, this.blockHeight)
         }
       }
-      
     }
   }
 }
