@@ -11,21 +11,23 @@ export default class Controller {
 
   handleKeyDown(event) {
     switch (event.key) {
+      case "Enter":
+        this.view.renderMainScreen(this.game.getState())
       case "ArrowLeft":
-        game.movePieceLeft()
-        view.render(game.getState())
+        this.game.movePieceLeft()
+        this.view.renderMainScreen(game.getState())
         break
       case "ArrowUp": 
-        game.rotatePiece()
-        view.render(game.getState())
+        this.game.rotatePiece()
+        this.view.renderMainScreen(game.getState())
         break
       case "ArrowRight": 
-        game.movePieceRight()
-        view.render(game.getState())
+        this.game.movePieceRight()
+        this.view.renderMainScreen(game.getState())
         break
       case "ArrowDown":
-        game.movePieceDown()
-        view.render(game.getState())
+        this.game.movePieceDown()
+        this.view.render(game.getState())
         break
     }
   }

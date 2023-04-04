@@ -1,9 +1,179 @@
 export default class Game {
+  constructor(pieces) {
+    this.allPieces = pieces
+  }
+
   static points = {
     "1": 40,
     "2": 100,
     "3": 300,
     "4": 1200
+  }
+
+  static allPiecesRotations = {
+    I: [
+      [
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+      ],
+      [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+      ],
+    ],
+    J: [
+      [
+        [1, 0, 0],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 1],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 0],
+        [1, 1, 0],
+      ],
+    ],
+    L: [
+      [
+        [0, 0, 1],
+        [1, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [1, 0, 0],
+        [1, 0, 0],
+        [1, 1, 0],
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [1, 0, 0],
+      ],
+      [
+        [1, 1, 0],
+        [0, 1, 0],
+        [0, 1, 0],
+      ],
+    ],
+    O: [
+      [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0],
+      ],
+      [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0],
+      ],
+    ],
+    S: [
+      [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0],
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 0, 1],
+      ],
+      [
+        [0, 0, 0],
+        [0, 1, 1],
+        [1, 1, 0],
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    ],
+    T: [
+      [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0]
+      ],
+      [
+        [0, 1, 0],
+        [0, 1, 1],
+        [0, 1, 0]
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0]
+      ],
+      [
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    ],
+    Z: [
+      [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0],
+      ],
+      [
+        [0, 0, 1],
+        [0, 1, 1],
+        [0, 1, 0],
+      ],
+      [
+        [0, 0, 0],
+        [1, 1, 0],
+        [0, 1, 1],
+      ],
+      [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+      ],
+    ]
+
   }
 
   score = 0
@@ -16,23 +186,36 @@ export default class Game {
     return Math.floor(this.lines * 0.1)
   }
 
+  getPiesRotationsByKey(key) {
+    if (!Game.allPiecesRotations[key]) {
+      new Error("Unknown piece")
+    }
+    return {
+      x: 0,
+      y: 0,
+      get blocks() { return this.rotations[this.rotationIndex] },
+      rotationIndex: 0,
+      rotations: Game.allPiecesRotations[key]
+    }
+  }
+
   getState() {
     const playfield = this.createPlayfield()
     const { y: pieceY, x: pieceX, blocks } = this.activePiece
 
     for (let y = 0; y < this.playfield.length; y++) {
-        playfield[y] = []
+      playfield[y] = []
 
       for (let x = 0; x < this.playfield[y].length; x++) {
-          playfield[y][x] = this.playfield[y][x]
+        playfield[y][x] = this.playfield[y][x]
       }
-  }
+    }
     for (let y = 0; y < blocks.length; y++) {
-        for (let x = 0; x < blocks[y].length; x++) {
-          if (blocks[y][x]) {
-            playfield[pieceY + y][pieceX + x] = blocks[y][x]
-          }
+      for (let x = 0; x < blocks[y].length; x++) {
+        if (blocks[y][x]) {
+          playfield[pieceY + y][pieceX + x] = blocks[y][x]
         }
+      }
     }
     return {
       score: this.score,
@@ -47,12 +230,12 @@ export default class Game {
     const playfield = []
 
     for (let y = 0; y < 20; y++) {
-        playfield[y] = []
+      playfield[y] = []
 
-        for (let x = 0; x < 10; x++) {
-          playfield[y][x] = 0
-          
-        }
+      for (let x = 0; x < 10; x++) {
+        playfield[y][x] = 0
+
+      }
     }
     return playfield
   }
@@ -60,252 +243,9 @@ export default class Game {
   createPiece() {
     const index = Math.floor(Math.random() * 7)
     const type = "IJLOSTZ"[index]
-    let piece = { }
-
-    switch (type) {
-      case "I":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [0,0,0,0],
-              [1,1,1,1],
-              [0,0,0,0],
-              [0,0,0,0],
-            ],
-            [
-              [0,0,1,0],
-              [0,0,1,0],
-              [0,0,1,0],
-              [0,0,1,0],
-            ],
-            [
-              [0,0,0,0],
-              [0,0,0,0],
-              [1,1,1,1],
-              [0,0,0,0],
-            ],
-            [
-              [0,1,0,0],
-              [0,1,0,0],
-              [0,1,0,0],
-              [0,1,0,0],
-            ],
-          ],
-        }
-        break
-
-      case "J":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [1,0,0],
-              [1,1,1],
-              [0,0,0],
-            ],
-            [
-              [0,1,1],
-              [0,1,0],
-              [0,1,0],
-            ],
-            [
-              [0,0,0],
-              [1,1,1],
-              [0,0,1],
-            ],
-            [
-              [0,1,0],
-              [0,1,0],
-              [1,1,0],
-            ],
-          ],
-      }
-      break
-
-      case "L":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [0,0,1],
-              [1,1,1],
-              [0,0,0],
-            ],
-            [
-              [1,0,0],
-              [1,0,0],
-              [1,1,0],
-            ],
-            [
-              [0,0,0],
-              [1,1,1],
-              [1,0,0],
-            ],
-            [
-              [1,1,0],
-              [0,1,0],
-              [0,1,0],
-            ],
-          ],
-      }
-        break
-
-      case "O":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [ 
-              [0,0,0,0],
-              [0,1,1,0],
-              [0,1,1,0],
-              [0,0,0,0],
-            ],
-            [ 
-              [0,0,0,0],
-              [0,1,1,0],
-              [0,1,1,0],
-              [0,0,0,0],
-            ],
-            [ 
-              [0,0,0,0],
-              [0,1,1,0],
-              [0,1,1,0],
-              [0,0,0,0],
-            ],
-            [ 
-              [0,0,0,0],
-              [0,1,1,0],
-              [0,1,1,0],
-              [0,0,0,0],
-            ],
-          ],
-      }
-        break
-
-      case "S":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [0,1,1],
-              [1,1,0],
-              [0,0,0],
-            ],
-            [
-              [0,1,0],
-              [0,1,1],
-              [0,0,1],
-            ],
-            [
-              [0,0,0],
-              [0,1,1],
-              [1,1,0],
-            ],
-            [
-              [1,0,0],
-              [1,1,0],
-              [0,1,0],
-            ],
-          ],
-        }
-        break
-
-      case "T":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [0, 1, 0],
-              [1, 1, 1],
-              [0, 0, 0]
-            ],
-            [
-              [0, 1, 0],
-              [0, 1, 1],
-              [0, 1, 0]
-            ],
-            [
-              [0, 0, 0],
-              [1, 1, 1],
-              [0, 1, 0]
-            ],
-            [
-              [0, 1, 0],
-              [1, 1, 0],
-              [0, 1, 0],
-            ],
-          ]             
-        }
-        break
-        
-      case "Z":
-        piece = { 
-          x: 0,
-          y: 0,
-          get blocks() {
-            return this.rotations[this.rotationIndex]
-          },
-          rotationIndex: 0,
-          rotations: [
-            [
-              [1,1,0],
-              [0,1,1],
-              [0,0,0],
-            ],
-            [
-              [0,0,1],
-              [0,1,1],
-              [0,1,0],
-            ],
-            [
-              [0,0,0],
-              [1,1,0],
-              [0,1,1],
-            ],
-            [
-              [1,0,0],
-              [1,1,0],
-              [0,1,0],
-            ],
-          ]
-        }
-        break
-        default: new Error("Unknown piece")
-      }
-    
+    let piece = this.getPiesRotationsByKey(type)
     piece.x = Math.floor((10 - piece.blocks[0].length) / 2)
-    piece.y = -1 
+    piece.y = -1
     return piece
   }
 
@@ -352,23 +292,23 @@ export default class Game {
     for (let y = 0; y < blocks.length; y++) {
       for (let x = 0; x < blocks[y].length; x++) {
         if (
-          blocks[y][x] && 
-          ((this.playfield[pieceY + y] === undefined || this.playfield[pieceY + y][pieceX + x] === undefined) || 
-          this.playfield[pieceY + y][pieceX + x])
-          ){
+          blocks[y][x] &&
+          ((this.playfield[pieceY + y] === undefined || this.playfield[pieceY + y][pieceX + x] === undefined) ||
+            this.playfield[pieceY + y][pieceX + x])
+        ) {
           return true
         }
       }
     }
     return false
-  } 
+  }
 
   lockPiece() {
     const { y: pieceY, x: pieceX, blocks } = this.activePiece
 
     for (let y = 0; y < blocks.length; y++) {
       for (let x = 0; x < blocks[y].length; x++) {
-          if(blocks[y][x]) {
+        if (blocks[y][x]) {
           this.playfield[pieceY + y][pieceX + x] = blocks[y][x]
         }
       }
@@ -380,27 +320,27 @@ export default class Game {
     const columns = 10
     let lines = []
 
-    for (let y =  rows - 1; y >= 0; y--) {
-        let numberOfBlocks = 0
+    for (let y = rows - 1; y >= 0; y--) {
+      let numberOfBlocks = 0
 
-        for (let x = 0; x < columns; x++) {
-            if (this.playfield[y][x]) {
-              numberOfBlocks += 1
-            }
+      for (let x = 0; x < columns; x++) {
+        if (this.playfield[y][x]) {
+          numberOfBlocks += 1
         }
+      }
 
-        if (numberOfBlocks === 0) {
-          break
-        } else if (numberOfBlocks < columns) {
-          continue
-        } else if (numberOfBlocks === columns) {
-          lines.unshift(y)
-        }
+      if (numberOfBlocks === 0) {
+        break
+      } else if (numberOfBlocks < columns) {
+        continue
+      } else if (numberOfBlocks === columns) {
+        lines.unshift(y)
+      }
     }
 
     for (let index of lines) {
-        this.playfield.splice(index, 1)
-        this.playfield.unshift(new Array(columns).fill(0))
+      this.playfield.splice(index, 1)
+      this.playfield.unshift(new Array(columns).fill(0))
     }
     return lines.length
   }

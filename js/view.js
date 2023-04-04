@@ -15,6 +15,12 @@ export default class View {
     this.element.appendChild(this.canvas)
   }
 
+  renderMainScreen(state) {
+    this.clearScreen()
+    this.renderPlayfield(state)
+    this.renderPanel(state)
+  }
+
   render(state) {
     this.clearScreen()
     this.renderPlayfield(state)
