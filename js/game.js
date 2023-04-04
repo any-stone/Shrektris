@@ -44,7 +44,71 @@ export default class Game {
   }
 
   createPiece() {
-    return {
+    const index = Math.floor(Math.random() * 7)
+    const type = "IJLOSTZ"[index]
+    const piece = { x: 0, y: 0 }
+
+    switch (type) {
+      case "I":
+        piece.blocks = [
+          [0,0,0,0],
+          [1,1,1,1],
+          [0,0,0,0],
+          [0,0,0,0],
+        ];
+        break
+
+      case "J":
+        piece.blocks = [
+          [0,0,0],
+          [1,1,1],
+          [0,0,1],
+        ];
+        break
+
+      case "L":
+        piece.blocks = [
+          [0,0,0],
+          [1,1,1],
+          [1,0,0],
+        ];
+        break
+
+      case "O":
+        piece.blocks = [
+          [0,0,0,0],
+          [0,1,1,0],
+          [0,1,1,0],
+          [0,0,0,0],
+        ];
+        break
+
+      case "S":
+        piece.blocks = [
+          [0,0,0],
+          [0,1,1],
+          [1,1,0],
+        ];
+        break
+
+      case "T":
+        piece.blocks = [
+          [0,0,0],
+          [1,1,1],
+          [0,1,0],
+        ];
+        break
+
+      case "Z":
+        piece.blocks = [
+          [0,0,0],
+          [1,1,0],
+          [0,1,1],
+        ];
+        break
+      default: new Error("Unknown piece")
+    }
+    return piece /*{
       x: 0,
       y: 0,
       get blocks() {
@@ -73,7 +137,7 @@ export default class Game {
           [0, 1, 0]
         ],
       ]
-    }
+    }*/
   }
 
   movePieceLeft() {
