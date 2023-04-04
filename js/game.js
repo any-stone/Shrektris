@@ -56,101 +56,253 @@ export default class Game {
   createPiece() {
     const index = Math.floor(Math.random() * 7)
     const type = "IJLOSTZ"[index]
-    const piece = { }
+    let piece = { }
 
     switch (type) {
       case "I":
-        piece.blocks = [
-          [0,0,0,0],
-          [1,1,1,1],
-          [0,0,0,0],
-          [0,0,0,0],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [0,0,0,0],
+              [1,1,1,1],
+              [0,0,0,0],
+              [0,0,0,0],
+            ],
+            [
+              [0,0,1,0],
+              [0,0,1,0],
+              [0,0,1,0],
+              [0,0,1,0],
+            ],
+            [
+              [0,0,0,0],
+              [0,0,0,0],
+              [1,1,1,1],
+              [0,0,0,0],
+            ],
+            [
+              [0,1,0,0],
+              [0,1,0,0],
+              [0,1,0,0],
+              [0,1,0,0],
+            ],
+          ],
+        }
         break
 
       case "J":
-        piece.blocks = [
-          [0,0,0],
-          [1,1,1],
-          [0,0,1],
-        ];
-        break
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [1,0,0],
+              [1,1,1],
+              [0,0,0],
+            ],
+            [
+              [0,1,1],
+              [0,1,0],
+              [0,1,0],
+            ],
+            [
+              [0,0,0],
+              [1,1,1],
+              [0,0,1],
+            ],
+            [
+              [0,1,0],
+              [0,1,0],
+              [1,1,0],
+            ],
+          ],
+      }
+      break
 
       case "L":
-        piece.blocks = [
-          [0,0,0],
-          [1,1,1],
-          [1,0,0],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [0,0,1],
+              [1,1,1],
+              [0,0,0],
+            ],
+            [
+              [1,0,0],
+              [1,0,0],
+              [1,1,0],
+            ],
+            [
+              [0,0,0],
+              [1,1,1],
+              [1,0,0],
+            ],
+            [
+              [1,1,0],
+              [0,1,0],
+              [0,1,0],
+            ],
+          ],
+      }
         break
 
       case "O":
-        piece.blocks = [
-          [0,0,0,0],
-          [0,1,1,0],
-          [0,1,1,0],
-          [0,0,0,0],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [ 
+              [0,0,0,0],
+              [0,1,1,0],
+              [0,1,1,0],
+              [0,0,0,0],
+            ],
+            [ 
+              [0,0,0,0],
+              [0,1,1,0],
+              [0,1,1,0],
+              [0,0,0,0],
+            ],
+            [ 
+              [0,0,0,0],
+              [0,1,1,0],
+              [0,1,1,0],
+              [0,0,0,0],
+            ],
+            [ 
+              [0,0,0,0],
+              [0,1,1,0],
+              [0,1,1,0],
+              [0,0,0,0],
+            ],
+          ],
+      }
         break
 
       case "S":
-        piece.blocks = [
-          [0,0,0],
-          [0,1,1],
-          [1,1,0],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [0,1,1],
+              [1,1,0],
+              [0,0,0],
+            ],
+            [
+              [0,1,0],
+              [0,1,1],
+              [0,0,1],
+            ],
+            [
+              [0,0,0],
+              [0,1,1],
+              [1,1,0],
+            ],
+            [
+              [1,0,0],
+              [1,1,0],
+              [0,1,0],
+            ],
+          ],
+        }
         break
 
       case "T":
-        piece.blocks = [
-          [0,0,0],
-          [1,1,1],
-          [0,1,0],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [0, 1, 0],
+              [1, 1, 1],
+              [0, 0, 0]
+            ],
+            [
+              [0, 1, 0],
+              [0, 1, 1],
+              [0, 1, 0]
+            ],
+            [
+              [0, 0, 0],
+              [1, 1, 1],
+              [0, 1, 0]
+            ],
+            [
+              [0, 1, 0],
+              [1, 1, 0],
+              [0, 1, 0],
+            ],
+          ]             
+        }
         break
-
+        
       case "Z":
-        piece.blocks = [
-          [0,0,0],
-          [1,1,0],
-          [0,1,1],
-        ];
+        piece = { 
+          x: 0,
+          y: 0,
+          get blocks() {
+            return this.rotations[this.rotationIndex]
+          },
+          rotationIndex: 0,
+          rotations: [
+            [
+              [1,1,0],
+              [0,1,1],
+              [0,0,0],
+            ],
+            [
+              [0,0,1],
+              [0,1,1],
+              [0,1,0],
+            ],
+            [
+              [0,0,0],
+              [1,1,0],
+              [0,1,1],
+            ],
+            [
+              [1,0,0],
+              [1,1,0],
+              [0,1,0],
+            ],
+          ]
+        }
         break
-      default: new Error("Unknown piece")
-    }
+        default: new Error("Unknown piece")
+      }
     
     piece.x = Math.floor((10 - piece.blocks[0].length) / 2)
     piece.y = -1 
-    return piece /*{
-      x: 0,
-      y: 0,
-      get blocks() {
-        return this.rotations[this.rotationIndex]
-      },
-      rotationIndex: 0,
-      rotations: [
-        [
-          [0, 1, 0],
-          [1, 1, 1],
-          [0, 0, 0]
-        ],
-        [
-          [0, 1, 0],
-          [0, 1, 1],
-          [0, 1, 0]
-        ],
-        [
-          [0, 0, 0],
-          [1, 1, 1],
-          [0, 1, 0]
-        ],
-        [
-          [0, 1, 0],
-          [1, 1, 0],
-          [0, 1, 0]
-        ],
-      ]
-    }*/
+    return piece
   }
 
   movePieceLeft() {
@@ -250,11 +402,9 @@ export default class Game {
   }
 
   updateScore(clearedLines) {
-    console.log(this.level);
     if (clearedLines > 0) {
       this.score += Game.points[clearedLines] * (this.level + 1)
       this.lines += clearedLines
-      console.log(this.score, this.lines, this.level);
     }
   }
 
