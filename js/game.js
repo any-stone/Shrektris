@@ -7,11 +7,14 @@ export default class Game {
   }
 
   score = 0
-  lines = 0
-  level = 0
+  lines = 19
   playfield = this.createPlayfield()
   activePiece = this.createPiece()
   nextPiece = this.createPiece()
+
+  get level() {
+    return Math.floor(this.lines * 0.1)
+  }
 
   getState() {
     const playfield = this.createPlayfield()
@@ -247,10 +250,11 @@ export default class Game {
   }
 
   updateScore(clearedLines) {
+    console.log(this.level);
     if (clearedLines > 0) {
-      this.score += Game.points[clearedLines]
+      this.score += Game.points[clearedLines] * (this.level + 1)
       this.lines += clearedLines
-      console.log(this.score, this.lines);
+      console.log(this.score, this.lines, this.level);
     }
   }
 
