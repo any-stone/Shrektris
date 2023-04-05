@@ -29,7 +29,11 @@ export default class Controller {
   }
 
   updateView() {
-    this.view.renderMainScreen(this.game.getState())
+    if (!this.isPlaying) {
+        this.view.renderPauseScreen()
+    } else {
+      this.view.renderMainScreen(this.game.getState())
+    }
   }
 
   startTimer() {
