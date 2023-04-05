@@ -6,6 +6,7 @@ export default class Controller {
     this.isPlaying = false
 
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
+    document.addEventListener('keyup', this.handleKeyUp.bind(this))
 
     this.view.renderStartScreen()
       
@@ -79,9 +80,18 @@ export default class Controller {
         this.updateView()
         break
       case "ArrowDown":
+        this.stopTimer()
         this.game.movePieceDown()
         this.updateView()
         break
     }
+  }
+
+  handleKeyUp(event) {
+      switch (event.key) {
+        case "ArrowDown":
+            this.startTimer()
+            break
+      }
   }
 }
