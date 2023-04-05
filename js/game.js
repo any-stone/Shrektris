@@ -226,6 +226,7 @@ export default class Game {
       lines: this.lines,
       nextPiece: this.nextPiece,
       playfield,
+      isGameOver: this.topOut,
     }
   }
 

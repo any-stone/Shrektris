@@ -29,10 +29,14 @@ export default class Controller {
   }
 
   updateView() {
-    if (!this.isPlaying) {
+    const state = this.game.getState()
+
+    if(state.isGameOver) {
+      this.view.renderEndScreen(state)
+    } else if (!this.isPlaying) {
         this.view.renderPauseScreen()
     } else {
-      this.view.renderMainScreen(this.game.getState())
+      this.view.renderMainScreen(state)
     }
   }
 
@@ -64,19 +68,19 @@ export default class Controller {
         break
       case "ArrowLeft":
         this.game.movePieceLeft()
-        this.view.renderMainScreen(this.game.getState())
+        this.updateView()
         break
       case "ArrowUp": 
         this.game.rotatePiece()
-        this.view.renderMainScreen(this.game.getState())
+        this.updateView()
         break
       case "ArrowRight": 
         this.game.movePieceRight()
-        this.view.renderMainScreen(this.game.getState())
+        this.updateView()
         break
       case "ArrowDown":
         this.game.movePieceDown()
-        this.view.renderMainScreen(this.game.getState())
+        this.updateView()
         break
     }
   }
