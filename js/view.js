@@ -34,22 +34,12 @@ export default class View {
     this.renderPanel(state)
   }
 
-  render(state) {
-    this.clearScreen()
-    this.renderPlayfield(state)
-    this.renderPanel(state)
-  }
-
-  clearScreen() {
-    this.context.clearRect(0, 0, this.width, this.height);
-  }
-
   renderStartScreen() {
     this.context.fillStyle = "white"
     this.context.font = '18px "Press Start 2P"'
     this.context.textAlign = "center"
     this.context.textBaseline = "middle"
-    this.context.fillText = ("Press ENTER to start", this.width / 2, this.height / 2)
+    this.context.fillText("Press ENTER to start", this.width / 2, this.height / 2)
   }
 
   renderPauseScreen() {
@@ -60,7 +50,22 @@ export default class View {
     this.context.font = '18px "Press Start 2P"'
     this.context.textAlign = "center"
     this.context.textBaseline = "middle"
-    this.context.fillText = ("Press ENTER to resume", this.width / 2, this.height / 2)
+    this.context.fillText("Press ENTER to resume", this.width / 2, this.height / 2)
+  }
+
+  renderEndScreen({ score }) {
+    this.clearScreen()
+
+    this.context.fillStyle = "white"
+    this.context.font = '18px "Press Start 2P"'
+    this.context.textAlign = "center"
+    this.context.textBaseline = "middle"
+    this.context.fillText("GAME OVER", this.width / 2, this.height / 2 - 48)
+    this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2)
+  }
+
+  clearScreen() {
+    this.context.clearRect(0, 0, this.width, this.height);
   }
 
   renderPlayfield({ playfield }) {
