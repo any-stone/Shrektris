@@ -175,6 +175,7 @@ export default class Game {
 
   score = 0
   lines = 0
+  topOut = false
   playfield = this.createPlayfield()
   activePiece = this.createPiece()
   nextPiece = this.createPiece()
@@ -197,16 +198,21 @@ export default class Game {
   }
 
   getState() {
-    const playfield = this.createPlayfield()
-    const { y: pieceY, x: pieceX, blocks } = this.activePiece
+    const playfield = this.createPlayfield();
+    const { 
+      y: pieceY, 
+      x: pieceX, 
+      blocks 
+    } = this.activePiece
 
     for (let y = 0; y < this.playfield.length; y++) {
-      playfield[y] = []
+      playfield[y] = [];
 
       for (let x = 0; x < this.playfield[y].length; x++) {
-        playfield[y][x] = this.playfield[y][x]
+        playfield[y][x] = this.playfield[y][x];
       }
     }
+
     for (let y = 0; y < blocks.length; y++) {
       for (let x = 0; x < blocks[y].length; x++) {
         if (blocks[y][x]) {
@@ -242,7 +248,6 @@ export default class Game {
     const type = "IJLOSTZ"[index]
     let piece = this.getPiecesRotationsByKey(type)
     piece.x = Math.floor((10 - piece.blocks[0].length) / 2)
-    piece.y = -1
     return piece
   }
 
@@ -263,14 +268,22 @@ export default class Game {
   }
 
   movePieceDown() {
-    this.activePiece.y += 1
+    if (this.topOut) {
+      return;
+    }
+
+    this.activePiece.y += 1;
 
     if (this.hasCollision()) {
-      this.activePiece.y -= 1
-      this.lockPiece()
-      const clearedLines = this.clearLines()
-      this.updateScore(clearedLines)
-      this.updatePIeces()
+      this.activePiece.y -= 1;
+      this.lockPiece();
+      const clearedLines = this.clearLines();
+      this.updateScore(clearedLines);
+      this.updatePIeces();
+    }
+
+    if (this.hasCollision()) {
+      this.topOut = true;
     }
   }
 
