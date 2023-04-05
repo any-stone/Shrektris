@@ -1,7 +1,4 @@
 export default class Game {
-  constructor(pieces) {
-    this.allPieces = pieces
-  }
 
   static points = {
     "1": 40,
@@ -177,7 +174,7 @@ export default class Game {
   }
 
   score = 0
-  lines = 19
+  lines = 0
   playfield = this.createPlayfield()
   activePiece = this.createPiece()
   nextPiece = this.createPiece()
@@ -186,7 +183,7 @@ export default class Game {
     return Math.floor(this.lines * 0.1)
   }
 
-  getPiesRotationsByKey(key) {
+  getPiecesRotationsByKey(key) {
     if (!Game.allPiecesRotations[key]) {
       new Error("Unknown piece")
     }
@@ -243,7 +240,7 @@ export default class Game {
   createPiece() {
     const index = Math.floor(Math.random() * 7)
     const type = "IJLOSTZ"[index]
-    let piece = this.getPiesRotationsByKey(type)
+    let piece = this.getPiecesRotationsByKey(type)
     piece.x = Math.floor((10 - piece.blocks[0].length) / 2)
     piece.y = -1
     return piece
