@@ -1,25 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="/js/app.js" type="module"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-    <title>Shrektris</title>
-
+    <script src="/js/app.js"></script>
+    <title>UGLY TETRIS</title>
   </head>
   <body>
-
-    <div id="root">
-      
-      <h1>SHREK-TRIS</h1>
-
+    <h1 id="caption">UGLY TETRIS</h1>
+    <div id="application">
+      <div id="display"></div>
+      <div id="menu1" class="menu">
+        <div><label>🏆 Score:</label> <span id="score">0</span></div>
+      </div>
+      <div id="menu2" class="menu">
+        <div><label>🏎️ Speed:</label> <span id="speed">0</span></div>
+      </div>
+      <div id="menu3" class="menu" style="opacity: 0;">
+        PAUSED
+      </div>  
+      <div id="menu5" class="menu" style="opacity: 0;">
+        GAME OVER
+      </div>  
+      <div id="menu4" class="menu">
+        <p style="text-align: center;"><strong>🕹️ Controls</strong></p>
+        <p>Left - ⬅️</p>
+        <p>Right - ➡️ </p>
+        <p>Down - ⬇️</p>
+        <p>Flip - ⬆️</p>
+        <p>Pause - ESC</p>
+        <button id="reset">Reset</button>
+      </div>
     </div>
-
+    <script src="script.js"></script>
   </body>
 </html>
