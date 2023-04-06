@@ -1,3 +1,5 @@
+![Ugly Tetris](/src/uglyTetris.png)
+
 ## [PRESS HERE TO PLAY](https://shrektris.netlify.app/) ##
 
 # Ugly Tetris
@@ -15,6 +17,8 @@ The following technologies were used in the development of this application:
 * HTML
 * CSS
 * JavaScript
+* Git 
+* Netlify
 
 ## Next Steps
 ### Here are some planned future enhancements for the game:
