@@ -1,6 +1,6 @@
-class Sprite {
-  constructor(element, options, helpers) {
-    this.curElement = element
+class Design {
+  constructor(elem, options, helpers) {
+    this.curElm = elem
     this.options = options || {}
     this.helpers = helpers || {}
     this.defaultStyles = {
@@ -10,15 +10,15 @@ class Sprite {
 
     if (helpers) {
       for (let index in helpers)
-        this.curElement[index] = helpers[index]
+        this.curElm[index] = helpers[index]
     }
   }
 
   applyStyles() {
     for (let index in this.defaultStyles)
-      this.curElement.style[index] = this.defaultStyles[index]
+      this.curElm.style[index] = this.defaultStyles[index]
     for (let index in this.options)
-      this.curElement.style[index] = this.options[index]
+      this.curElm.style[index] = this.options[index]
   }
 
   setOptions(options) {
@@ -33,18 +33,18 @@ class Sprite {
 }
 
 class Layer {
-  constructor(element, elementId, options) {
-    this.curElement = element
-    this.elementId = elementId
+  constructor(elem, elemId, options) {
+    this.curElm = elem
+    this.elemId = elemId
     this.options = options || {}
     this.defaultStyles = {
-      position: 'absolute',
-      left: '0px',
-      top: '0px',
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'transparent',
-      overflow: 'hidden',
+      position: "absolute",
+      left: "0px",
+      top: "0px",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "transparent",
+      overflow: "hidden",
       zIndex: 0
     }
     this.curId = 0
@@ -53,9 +53,9 @@ class Layer {
 
   applyStyles() {
     for (let index in this.defaultStyles)
-      this.curElement.style[index] = this.defaultStyles[index]
+      this.curElm.style[index] = this.defaultStyles[index]
     for (let index in this.options)
-      this.curElement.style[index] = this.options[index]
+      this.curElm.style[index] = this.options[index]
   }
 
   render() {
@@ -64,26 +64,26 @@ class Layer {
       this.sprites[index].render()
   }
 
-  getNewSpriteId() {
+  getNewDesignId() {
     this.curId++
-    return this.elementId + '-sprite-' + this.curId
+    return this.elemId + '-sprite-' + this.curId
   }
 
-  removeSprite(spriteId) {
+  removeDesign(spriteId) {
     delete (this.sprites[spriteId])
   }
 
-  createSprite(name, options, helpers) {
+  createDesign(name, options, helpers) {
     let newElement = document.createElement("div")
-    let newId = this.getNewSpriteId()
+    let newId = this.getNewDesignId()
     newElement.setAttribute("id", newId)
 
-    if (this.curElement) {
-      this.curElement.appendChild(newElement)
-      this.sprites[name] = new Sprite(newElement, options, helpers)
+    if (this.curElm) {
+      this.curElm.appendChild(newElement)
+      this.sprites[name] = new Design(newElement, options, helpers)
       return this.sprites[name]
     } else {
-      console.error("Error: Layer curElement is null.")
+      console.error("Error: Layer curElm is null.")
       return null
     }
   }
@@ -91,9 +91,9 @@ class Layer {
 
 class Display {
 
-  constructor(elementSelector, options) {
-    this.elementSelector = elementSelector
-    this.curElement = document.querySelector(this.elementSelector)
+  constructor(elemSelector, options) {
+    this.elemSelector = elemSelector
+    this.curElm = document.querySelector(this.elemSelector)
     this.layers = {}
     this.curId = 0
     this.options = options || {}
@@ -115,7 +115,7 @@ class Display {
     let newElement = document.createElement("div")
     let newId = this.getNewLayerId()
     newElement.setAttribute("id", newId)
-    this.curElement.appendChild(newElement)
+    this.curElm.appendChild(newElement)
     this.layers[name] = new Layer(newElement, newId, options)
     return this.layers[name]
   }
@@ -126,9 +126,9 @@ class Display {
 
   applyStyles() {
     for (let index in this.defaultStyles)
-      this.curElement.style[index] = this.defaultStyles[index]
+      this.curElm.style[index] = this.defaultStyles[index]
     for (let index in this.options)
-      this.curElement.style[index] = this.options[index]
+      this.curElm.style[index] = this.options[index]
   }
 
   render() {
@@ -297,32 +297,32 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-function getRandomFigure() {
+function getRandomPiece() {
   let index = getRandomInt(0, figures.length - 1)
   return figures[index]
 }
 
-class Figure {
-  constructor(positionsMap, curFigureNumber, layer, blockSize, startTop, startLeft, colors) {
+class Piece {
+  constructor(positionsMap, curPieceNumber, layer, blockSize, startTop, startLeft, colors) {
     this.positionsMap = positionsMap
     this.curFlip = 0
     this.layer = layer
-    this.curFigureNumber = curFigureNumber
+    this.curPieceNumber = curPieceNumber
     this.blockSize = blockSize
     this.left = startLeft
     this.top = startTop
     this.sprites = []
-    this.createSprites(colors)
+    this.createDesigns(colors)
     this.maxX = 15
     this.maxY = 20
   }
 
-  createSprites(colors) {
+  createDesigns(colors) {
     for (let index in this.positionsMap[0]) {
-      let left = this.calcSpriteLeft(0, index, this.left)
-      let top = this.calcSpriteTop(0, index, this.top)
+      let left = this.calcDesignLeft(0, index, this.left)
+      let top = this.calcDesignTop(0, index, this.top)
 
-      this.sprites[index] = this.layer.createSprite(`figure-${this.curFigureNumber}-${index}`, {
+      this.sprites[index] = this.layer.createDesign(`figure-${this.curPieceNumber}-${index}`, {
         backgroundColor: colors.main,
         boxSizing: "border-box",
         border: "2px solid " + colors.border,
@@ -341,23 +341,23 @@ class Figure {
   recalcPositions(flip, curLeft, curTop) {
     let newCoords = []
     for (let index in this.sprites) {
-      let left = this.calcSpriteLeft(flip, index, curLeft)
-      let top = this.calcSpriteTop(flip, index, curTop)
+      let left = this.calcDesignLeft(flip, index, curLeft)
+      let top = this.calcDesignTop(flip, index, curTop)
       newCoords[index] = { x: left, y: top }
     }
     return newCoords
   }
 
-  compareSpritesPositions(x, y, freezedSprites) {
-    for (let index in freezedSprites) {
-      let sprite = freezedSprites[index]
-      if ((x == parseInt(sprite.curElement.style.left)) & (y == parseInt(sprite.curElement.style.top)))
+  compareDesignsPositions(x, y, freezedDesigns) {
+    for (let index in freezedDesigns) {
+      let sprite = freezedDesigns[index]
+      if ((x == parseInt(sprite.curElm.style.left)) & (y == parseInt(sprite.curElm.style.top)))
         return true
     }
     return false
   }
 
-  checkPositions(newCoords, freezedSprites) {
+  checkPositions(newCoords, freezedDesigns) {
     for (let index in newCoords) {
       if (newCoords[index].x >= (this.maxX * this.blockSize))
         return false
@@ -365,7 +365,7 @@ class Figure {
         return false
       if (newCoords[index].y >= (this.maxY * this.blockSize))
         return false
-      if (this.compareSpritesPositions(newCoords[index].x, newCoords[index].y, freezedSprites))
+      if (this.compareDesignsPositions(newCoords[index].x, newCoords[index].y, freezedDesigns))
         return false
     }
     return true
@@ -378,24 +378,24 @@ class Figure {
     }
   }
 
-  flip(freezedSprites) {
+  flip(freezedDesigns) {
     let tmpFlip = this.curFlip + 1
     if (tmpFlip >= this.positionsMap.length)
       tmpFlip = 0
 
     let newCoords = this.recalcPositions(tmpFlip, this.left, this.top)
-    if (this.checkPositions(newCoords, freezedSprites)) {
+    if (this.checkPositions(newCoords, freezedDesigns)) {
       this.curFlip = tmpFlip
       this.applyPositions(newCoords)
       this.layer.render()
     }
   }
 
-  moveY(yIncrement, freezedSprites) {
+  moveY(yIncrement, freezedDesigns) {
     let tmpTop = this.top + yIncrement * this.blockSize
     let newCoords = this.recalcPositions(this.curFlip, this.left, tmpTop)
 
-    if (this.checkPositions(newCoords, freezedSprites)) {
+    if (this.checkPositions(newCoords, freezedDesigns)) {
       this.top = tmpTop
       this.applyPositions(newCoords)
       this.layer.render()
@@ -405,23 +405,23 @@ class Figure {
     return true
   }
 
-  moveX(xIncrement, freezedSprites) {
+  moveX(xIncrement, freezedDesigns) {
     let tmpLeft = this.left + xIncrement * this.blockSize
     let newCoords = this.recalcPositions(this.curFlip, tmpLeft, this.top)
 
-    if (this.checkPositions(newCoords, freezedSprites)) {
+    if (this.checkPositions(newCoords, freezedDesigns)) {
       this.left = tmpLeft
       this.applyPositions(newCoords)
       this.layer.render()
     }
   }
 
-  calcSpriteLeft(mapId, spriteId, curLeft) {
+  calcDesignLeft(mapId, spriteId, curLeft) {
     let obj = this.positionsMap[mapId]
     return curLeft + obj[spriteId].x * this.blockSize
   }
 
-  calcSpriteTop(mapId, spriteId, curTop) {
+  calcDesignTop(mapId, spriteId, curTop) {
     let obj = this.positionsMap[mapId]
     return curTop + obj[spriteId].y * this.blockSize
   }
@@ -448,14 +448,14 @@ class Application {
     })
 
     this.display.render()
-    this.curFigure = null
-    this.curRaund = 0
+    this.curPiece = null
+    this.curRound = 0
     this.calculateInterval = null
     let self = this
     document.onkeydown = function (e) {
       self.keyEvents(e)
     }
-    this.freezedSprites = {}
+    this.freezedDesigns = {}
     this.freezeIndex = 0
     this.removePoll = {}
     this.paused = false
@@ -470,13 +470,13 @@ class Application {
 
   keyEvents(e) {
     switch (e.keyCode) {
-      case 38: this.curFigure.flip(this.freezedSprites)
+      case 38: this.curPiece.flip(this.freezedDesigns)
         break
 
-      case 37: this.curFigure.moveX(-1, this.freezedSprites)
+      case 37: this.curPiece.moveX(-1, this.freezedDesigns)
         break
 
-      case 39: this.curFigure.moveX(1, this.freezedSprites)
+      case 39: this.curPiece.moveX(1, this.freezedDesigns)
         break
 
       case 40: this.tick()
@@ -487,10 +487,10 @@ class Application {
     }
   }
 
-  calcSpeed(curRaund) {
-    let decrimend = 700 - curRaund * 5
-    if (decrimend < 0) decrimend = 0
-    return 300 + decrimend
+  calcSpeed(curRound) {
+    let dicrement = 700 - curRound * 5
+    if (dicrement < 0) dicrement = 0
+    return 300 + dicrement
   }
 
   pause() {
@@ -503,57 +503,57 @@ class Application {
       document.querySelector('#menu3').style.opacity = 0
       this.calculateInterval = setInterval(() => {
         this.tick()
-      }, this.calcSpeed(this.curRaund))
+      }, this.calcSpeed(this.curRound))
     }
   }
 
-  startRaund() {
-    this.curRaund++
-    document.querySelector('#speed').innerHTML = 1000 - this.calcSpeed(this.curRaund)
+  startRound() {
+    this.curRound++
+    document.querySelector("#speed").innerHTML = 1000 - this.calcSpeed(this.curRound)
 
     const startLeft = parseInt(this.tetrisWidth / 2) * 30
     const startTop = 30
     const color = colors[getRandomInt(0, colors.length - 1)]
 
-    this.curFigure = new Figure(getRandomFigure(), this.curRaund, this.display.layers.front, this.blockSize, startTop, startLeft, color)
+    this.curPiece = new Piece(getRandomPiece(), this.curRound, this.display.layers.front, this.blockSize, startTop, startLeft, color)
 
     clearInterval(this.calculateInterval)
     this.calculateInterval = setInterval(() => {
       this.tick()
-    }, this.calcSpeed(this.curRaund))
+    }, this.calcSpeed(this.curRound))
     this.display.render()
   }
 
   recalculateYPosition(obj) {
-    let curTop = parseInt(obj.curElement.style.top) || 0
+    let curTop = parseInt(obj.curElm.style.top) || 0
     return curTop + this.blockSize
   }
 
-  moveToFreezed(curFigure) {
-    for (let index in curFigure.sprites) {
-      this.freezedSprites[this.freezeIndex] = curFigure.sprites[index]
+  moveToFreezed(curPiece) {
+    for (let index in curPiece.sprites) {
+      this.freezedDesigns[this.freezeIndex] = curPiece.sprites[index]
       this.freezeIndex++
     }
   }
 
-  checkGameOver() {
+  isGameOver() {
     const startLeft = parseInt(this.tetrisWidth / 2) * 30
     const startTop = 60
 
-    for (let index in this.freezedSprites) {
-      let sprite = this.freezedSprites[index]
-      if ((parseInt(sprite.curElement.style.top) <= startTop) & (parseInt(sprite.curElement.style.left) == startLeft))
+    for (let index in this.freezedDesigns) {
+      let sprite = this.freezedDesigns[index]
+      if ((parseInt(sprite.curElm.style.top) <= startTop) & (parseInt(sprite.curElm.style.left) == startLeft))
         return true
     }
     return false
   }
 
-  calcMapPositionX(freezedSprite) {
-    return parseInt(parseInt(freezedSprite.curElement.style.left) / this.blockSize)
+  calcMapPositionX(freezedDesign) {
+    return parseInt(parseInt(freezedDesign.curElm.style.left) / this.blockSize)
   }
 
-  calcMapPositionY(freezedSprite) {
-    return parseInt(parseInt(freezedSprite.curElement.style.top) / this.blockSize)
+  calcMapPositionY(freezedDesign) {
+    return parseInt(parseInt(freezedDesign.curElm.style.top) / this.blockSize)
   }
 
   checkLine(line) {
@@ -572,7 +572,7 @@ class Application {
   }
 
   moveDown(dropLines) {
-    let score = dropLines.length * dropLines.length * this.curRaund
+    let score = dropLines.length * dropLines.length * this.curRound
     let curScore = parseInt(document.querySelector('#score').innerHTML)
     document.querySelector('#score').innerHTML = curScore + score
     let linesMap = this.createLinesMap()
@@ -584,8 +584,8 @@ class Application {
           if (tmpIndex != null) {
             linesMap[y][x] = linesMap[y - 1][x]
             linesMap[y - 1][x] = null
-            let tmpY = parseInt(this.freezedSprites[tmpIndex].options.top)
-            this.freezedSprites[tmpIndex].options.top = tmpY + this.blockSize + 'px'
+            let tmpY = parseInt(this.freezedDesigns[tmpIndex].options.top)
+            this.freezedDesigns[tmpIndex].options.top = tmpY + this.blockSize + 'px'
           }
         }
 
@@ -593,7 +593,7 @@ class Application {
 
     setTimeout(() => {
       for (let index in this.removePoll) {
-        this.removePoll[index].curElement.remove()
+        this.removePoll[index].curElm.remove()
       }
       this.removePoll = {}
     }, 300)
@@ -607,9 +607,9 @@ class Application {
         emptyLine.push(null)
       linesMap.push(emptyLine)
     }
-    for (let index in this.freezedSprites) {
-      let x = this.calcMapPositionX(this.freezedSprites[index])
-      let y = this.calcMapPositionY(this.freezedSprites[index])
+    for (let index in this.freezedDesigns) {
+      let x = this.calcMapPositionX(this.freezedDesigns[index])
+      let y = this.calcMapPositionY(this.freezedDesigns[index])
       linesMap[y][x] = index
     }
     return linesMap
@@ -630,8 +630,8 @@ class Application {
 
   moveToRemovePool(itemsArray) {
     for (let index of itemsArray) {
-      this.removePoll[index] = this.freezedSprites[index]
-      delete (this.freezedSprites[index])
+      this.removePoll[index] = this.freezedDesigns[index]
+      delete (this.freezedDesigns[index])
     }
   }
 
@@ -639,18 +639,18 @@ class Application {
     if (this.paused) {
       return;
     }
-    if (!this.curFigure.moveY(1, this.freezedSprites)) {
-      this.moveToFreezed(this.curFigure)
+    if (!this.curPiece.moveY(1, this.freezedDesigns)) {
+      this.moveToFreezed(this.curPiece)
       let dropLines = this.checkForDropLines()
       if (dropLines.length > 0) {
         this.startRemove(dropLines)
       }
   
-      if (this.checkGameOver()) {
+      if (this.isGameOver()) {
         clearInterval(this.calculateInterval)
         document.querySelector('#menu6').style.opacity = 1
       } else {
-        this.startRaund()
+        this.startRound()
       }
     }
   }
@@ -668,29 +668,28 @@ class Application {
     this.removePoll = {}
     this.paused = true
     this.score = 0
-    this.curRaund = 0
+    this.curRound = 0
     document.querySelector("#score").innerHTML = this.score
   
     document.querySelector("#menu6").style.opacity = 0
   
-    if (this.curFigure) {
-      for (let key in this.curFigure.sprites) {
-        this.curFigure.sprites[key].options.opacity = 0
+    if (this.curPiece) {
+      for (let key in this.curPiece.sprites) {
+        this.curPiece.sprites[key].options.opacity = 0
       }
     }
 
-    for (let key in this.freezedSprites) {
-      console.log(this.freezedSprites[key])
-      this.freezedSprites[key].options.opacity = 0
-      this.display.layers.front.removeSprite(key)
+    for (let key in this.freezedDesigns) {
+      console.log(this.freezedDesigns[key])
+      this.freezedDesigns[key].options.opacity = 0
+      this.display.layers.front.removeDesign(key)
     }
 
-    this.freezedSprites = {}
+    this.freezedDesigns = {}
     this.display.render()
-    this.startRaund()
+    this.startRound()
     this.pause()
   }
-
 }
 
 document.addEventListener("keydown", function (e) {
@@ -698,7 +697,7 @@ document.addEventListener("keydown", function (e) {
   if (e.key === "Enter" && !window.app) {
   document.querySelector("#menu5").style.opacity = 0
   window.app = new Application()
-  app.startRaund()
+  app.startRound()
   }
 })
 
