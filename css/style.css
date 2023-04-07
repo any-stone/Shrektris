@@ -61,6 +61,14 @@ html, body {
   transition: all 0.2s ease-out;
 }
 
+#menu7 {
+  top: 148px;
+  text-align: center;
+  font-size: 20px;
+  color: red;
+  transition: all 0.2s ease-out;
+}
+
 #menu4 {
   bottom: 0px;
 }

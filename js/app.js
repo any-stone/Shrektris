@@ -48,7 +48,7 @@ class Layer {
       zIndex: 0
     }
     this.curId = 0
-    this.sprites = {}
+    this.designs = {}
   }
 
   applyStyles() {
@@ -60,17 +60,17 @@ class Layer {
 
   render() {
     this.applyStyles()
-    for (let index in this.sprites)
-      this.sprites[index].render()
+    for (let index in this.designs)
+      this.designs[index].render()
   }
 
   getNewDesignId() {
     this.curId++
-    return this.elemId + '-sprite-' + this.curId
+    return this.elemId + '-design-' + this.curId
   }
 
-  removeDesign(spriteId) {
-    delete (this.sprites[spriteId])
+  removeDesign(designId) {
+    delete (this.designs[designId])
   }
 
   createDesign(name, options, helpers) {
@@ -80,8 +80,8 @@ class Layer {
 
     if (this.curElm) {
       this.curElm.appendChild(newElement)
-      this.sprites[name] = new Design(newElement, options, helpers)
-      return this.sprites[name]
+      this.designs[name] = new Design(newElement, options, helpers)
+      return this.designs[name]
     } else {
       console.error("Error: Layer curElm is null.")
       return null
@@ -311,7 +311,7 @@ class Piece {
     this.blockSize = blockSize
     this.left = startLeft
     this.top = startTop
-    this.sprites = []
+    this.designs = []
     this.createDesigns(colors)
     this.maxX = 15
     this.maxY = 20
@@ -322,7 +322,7 @@ class Piece {
       let left = this.calcDesignLeft(0, index, this.left)
       let top = this.calcDesignTop(0, index, this.top)
 
-      this.sprites[index] = this.layer.createDesign(`figure-${this.curPieceNumber}-${index}`, {
+      this.designs[index] = this.layer.createDesign(`figure-${this.curPieceNumber}-${index}`, {
         backgroundColor: colors.main,
         boxSizing: "border-box",
         border: "2px solid " + colors.border,
@@ -340,7 +340,7 @@ class Piece {
 
   recalcPositions(flip, curLeft, curTop) {
     let newCoords = []
-    for (let index in this.sprites) {
+    for (let index in this.designs) {
       let left = this.calcDesignLeft(flip, index, curLeft)
       let top = this.calcDesignTop(flip, index, curTop)
       newCoords[index] = { x: left, y: top }
@@ -350,8 +350,8 @@ class Piece {
 
   compareDesignsPositions(x, y, freezedDesigns) {
     for (let index in freezedDesigns) {
-      let sprite = freezedDesigns[index]
-      if ((x == parseInt(sprite.curElm.style.left)) & (y == parseInt(sprite.curElm.style.top)))
+      let design = freezedDesigns[index]
+      if ((x == parseInt(design.curElm.style.left)) & (y == parseInt(design.curElm.style.top)))
         return true
     }
     return false
@@ -373,15 +373,16 @@ class Piece {
 
   applyPositions(newCoords) {
     for (let index in newCoords) {
-      this.sprites[index].options.left = newCoords[index].x + "px"
-      this.sprites[index].options.top = newCoords[index].y + "px"
+      this.designs[index].options.left = newCoords[index].x + "px"
+      this.designs[index].options.top = newCoords[index].y + "px"
     }
   }
 
   flip(freezedDesigns) {
     let tmpFlip = this.curFlip + 1
-    if (tmpFlip >= this.positionsMap.length)
+    if (tmpFlip >= this.positionsMap.length) {
       tmpFlip = 0
+    }
 
     let newCoords = this.recalcPositions(tmpFlip, this.left, this.top)
     if (this.checkPositions(newCoords, freezedDesigns)) {
@@ -416,14 +417,14 @@ class Piece {
     }
   }
 
-  calcDesignLeft(mapId, spriteId, curLeft) {
+  calcDesignLeft(mapId, designId, curLeft) {
     let obj = this.positionsMap[mapId]
-    return curLeft + obj[spriteId].x * this.blockSize
+    return curLeft + obj[designId].x * this.blockSize
   }
 
-  calcDesignTop(mapId, spriteId, curTop) {
+  calcDesignTop(mapId, designId, curTop) {
     let obj = this.positionsMap[mapId]
-    return curTop + obj[spriteId].y * this.blockSize
+    return curTop + obj[designId].y * this.blockSize
   }
 
 }
@@ -467,7 +468,6 @@ class Application {
     resetButton.addEventListener("click", () => this.reset())
   }
 
-
   keyEvents(e) {
     switch (e.keyCode) {
       case 38: this.curPiece.flip(this.freezedDesigns)
@@ -494,6 +494,9 @@ class Application {
   }
 
   pause() {
+    if (this.isGameOver()) {
+      return
+    }
     if (!this.paused) {
       this.paused = true
       clearInterval(this.calculateInterval)
@@ -530,8 +533,8 @@ class Application {
   }
 
   moveToFreezed(curPiece) {
-    for (let index in curPiece.sprites) {
-      this.freezedDesigns[this.freezeIndex] = curPiece.sprites[index]
+    for (let index in curPiece.designs) {
+      this.freezedDesigns[this.freezeIndex] = curPiece.designs[index]
       this.freezeIndex++
     }
   }
@@ -541,8 +544,8 @@ class Application {
     const startTop = 60
 
     for (let index in this.freezedDesigns) {
-      let sprite = this.freezedDesigns[index]
-      if ((parseInt(sprite.curElm.style.top) <= startTop) & (parseInt(sprite.curElm.style.left) == startLeft))
+      let design = this.freezedDesigns[index]
+      if ((parseInt(design.curElm.style.top) <= startTop) & (parseInt(design.curElm.style.left) == startLeft))
         return true
     }
     return false
@@ -571,10 +574,20 @@ class Application {
     setTimeout(() => this.moveDown(dropLines), 300)
   }
 
+  checkScoreAndDisplayMessage() {
+    if (this.score >= 50) {
+      document.querySelector("#menu7").style.opacity = 1
+    }
+  }
+
   moveDown(dropLines) {
     let score = dropLines.length * dropLines.length * this.curRound
-    let curScore = parseInt(document.querySelector('#score').innerHTML)
-    document.querySelector('#score').innerHTML = curScore + score
+    let curScore = parseInt(document.querySelector("#score").innerHTML)
+    this.score = curScore + score
+    document.querySelector("#score").innerHTML = this.score
+
+    this.checkScoreAndDisplayMessage()
+
     let linesMap = this.createLinesMap()
 
     for (let line of dropLines)
@@ -585,15 +598,15 @@ class Application {
             linesMap[y][x] = linesMap[y - 1][x]
             linesMap[y - 1][x] = null
             let tmpY = parseInt(this.freezedDesigns[tmpIndex].options.top)
-            this.freezedDesigns[tmpIndex].options.top = tmpY + this.blockSize + 'px'
+            this.freezedDesigns[tmpIndex].options.top = tmpY + this.blockSize + "px"
           }
         }
 
-    this.display.layers.front.render()
+    this.display.layers.front.render();
 
     setTimeout(() => {
       for (let index in this.removePoll) {
-        this.removePoll[index].curElm.remove()
+        this.removePoll[index].curElm.remove();
       }
       this.removePoll = {}
     }, 300)
@@ -637,7 +650,7 @@ class Application {
 
   tick() {
     if (this.paused) {
-      return;
+      return
     }
     if (!this.curPiece.moveY(1, this.freezedDesigns)) {
       this.moveToFreezed(this.curPiece)
@@ -645,42 +658,47 @@ class Application {
       if (dropLines.length > 0) {
         this.startRemove(dropLines)
       }
-  
+
       if (this.isGameOver()) {
         clearInterval(this.calculateInterval)
-        document.querySelector('#menu6').style.opacity = 1
+        document.querySelector("#menu6").style.opacity = 1
       } else {
         this.startRound()
       }
     }
   }
-  
+
   createGameContainer() {
-    const gameContainer = document.createElement('div')
-    gameContainer.id = 'game-container'
+    const gameContainer = document.createElement("div")
+    gameContainer.id = "game-container"
     document.body.appendChild(gameContainer)
   }
 
   reset() {
-    clearInterval(this.calculateInterval)
-  
     this.freezeIndex = 0
     this.removePoll = {}
-    this.paused = true
     this.score = 0
     this.curRound = 0
     document.querySelector("#score").innerHTML = this.score
-  
     document.querySelector("#menu6").style.opacity = 0
-  
+    document.querySelector("#menu7").style.opacity = 0
+    clearInterval(this.calculateInterval)
+
+    if (this.paused) {
+      this.paused = false
+      document.querySelector('#menu3').style.opacity = 0
+      this.calculateInterval = setInterval(() => {
+        this.tick()
+      }, this.calcSpeed(this.curRound))
+    }
+
     if (this.curPiece) {
-      for (let key in this.curPiece.sprites) {
-        this.curPiece.sprites[key].options.opacity = 0
+      for (let key in this.curPiece.designs) {
+        this.curPiece.designs[key].options.opacity = 0
       }
     }
 
     for (let key in this.freezedDesigns) {
-      console.log(this.freezedDesigns[key])
       this.freezedDesigns[key].options.opacity = 0
       this.display.layers.front.removeDesign(key)
     }
@@ -688,16 +706,15 @@ class Application {
     this.freezedDesigns = {}
     this.display.render()
     this.startRound()
-    this.pause()
   }
 }
 
 document.addEventListener("keydown", function (e) {
-  
+
   if (e.key === "Enter" && !window.app) {
-  document.querySelector("#menu5").style.opacity = 0
-  window.app = new Application()
-  app.startRound()
+    document.querySelector("#menu5").style.opacity = 0
+    window.app = new Application()
+    app.startRound()
   }
 })
 
