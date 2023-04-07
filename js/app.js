@@ -575,7 +575,7 @@ class Application {
   }
 
   checkScoreAndDisplayMessage() {
-    if (this.score >= 50) {
+    if (this.score >= 15) {
       document.querySelector("#menu7").style.opacity = 1
     }
   }
