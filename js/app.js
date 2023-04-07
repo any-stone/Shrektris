@@ -4,7 +4,7 @@ class Sprite {
     this.options = options || {}
     this.helpers = helpers || {}
     this.defaultStyles = {
-      position: 'absolute',
+      position: "absolute",
       zIndex: 0
     }
 
@@ -70,14 +70,13 @@ class Layer {
   }
 
   removeSprite(spriteId) {
-    // this.sprites[spriteId].curElement.remove()
     delete (this.sprites[spriteId])
   }
 
   createSprite(name, options, helpers) {
-    let newElement = document.createElement('div')
+    let newElement = document.createElement("div")
     let newId = this.getNewSpriteId()
-    newElement.setAttribute('id', newId)
+    newElement.setAttribute("id", newId)
 
     if (this.curElement) {
       this.curElement.appendChild(newElement)
@@ -88,8 +87,6 @@ class Layer {
       return null
     }
   }
-
-
 }
 
 class Display {
@@ -101,11 +98,11 @@ class Display {
     this.curId = 0
     this.options = options || {}
     this.defaultStyles = {
-      position: 'absolute',
-      left: '0px',
-      top: '0px',
-      backgroundColor: 'transparent',
-      overflow: 'hidden'
+      position: "absolute",
+      left: "0px",
+      top: "0px",
+      backgroundColor: "transparent",
+      overflow: "hidden"
     }
   }
 
@@ -115,16 +112,15 @@ class Display {
   }
 
   createLayer(name, options) {
-    let newElement = document.createElement('div')
+    let newElement = document.createElement("div")
     let newId = this.getNewLayerId()
-    newElement.setAttribute('id', newId)
+    newElement.setAttribute("id", newId)
     this.curElement.appendChild(newElement)
     this.layers[name] = new Layer(newElement, newId, options)
     return this.layers[name]
   }
 
   removeLayer(layerId) {
-    // this.layers[layerId].curElement.remove()
     delete (this.layers[layerId])
   }
 
@@ -141,7 +137,6 @@ class Display {
       this.layers[index].render()
     }
   }
-
 }
 
 const l1_block = [
@@ -329,15 +324,15 @@ class Figure {
 
       this.sprites[index] = this.layer.createSprite(`figure-${this.curFigureNumber}-${index}`, {
         backgroundColor: colors.main,
-        boxSizing: 'border-box',
-        border: '2px solid ' + colors.border,
-        width: this.blockSize + 'px',
-        height: this.blockSize + 'px',
-        top: top + 'px',
-        left: left + 'px',
-        transition: 'all 0.2s ease-out',
+        boxSizing: "border-box",
+        border: "2px solid " + colors.border,
+        width: this.blockSize + "px",
+        height: this.blockSize + "px",
+        top: top + "px",
+        left: left + "px",
+        transition: "all 0.2s ease-out",
         opacity: 1,
-        borderRadius: '2px'
+        borderRadius: "px"
       })
     }
   }
@@ -378,8 +373,8 @@ class Figure {
 
   applyPositions(newCoords) {
     for (let index in newCoords) {
-      this.sprites[index].options.left = newCoords[index].x + 'px'
-      this.sprites[index].options.top = newCoords[index].y + 'px'
+      this.sprites[index].options.left = newCoords[index].x + "px"
+      this.sprites[index].options.top = newCoords[index].y + "px"
     }
   }
 
@@ -433,24 +428,22 @@ class Figure {
 
 }
 
-//******************
-
 class Application {
   constructor(width, height, blockSize) {
     this.tetrisWidth = width || 15
     this.tetrisHeight = height || 20
     this.blockSize = blockSize || 30
 
-    this.display = new Display('#display', {
-      width: '450px',
-      height: '600px;'
+    this.display = new Display("#display", {
+      width: "450px",
+      height: "600px;"
     })
-    this.display.createLayer('back', {
-      background: '#222',
+    this.display.createLayer("back", {
+      background: "#222",
       zIndex: 0
     })
-    this.display.createLayer('front', {
-      background: '#333',
+    this.display.createLayer("front", {
+      background: "#333",
       zIndex: 1
     })
 
@@ -470,9 +463,8 @@ class Application {
 
     this.createGameContainer()
 
-    // Add event listener to reset button
-    const resetButton = document.querySelector('#reset');
-    resetButton.addEventListener('click', () => this.reset());
+    const resetButton = document.querySelector("#reset")
+    resetButton.addEventListener("click", () => this.reset())
   }
 
 
@@ -517,7 +509,6 @@ class Application {
 
   startRaund() {
     this.curRaund++
-    // speed indication
     document.querySelector('#speed').innerHTML = 1000 - this.calcSpeed(this.curRaund)
 
     const startLeft = parseInt(this.tetrisWidth / 2) * 30
@@ -581,12 +572,9 @@ class Application {
   }
 
   moveDown(dropLines) {
-    // score indication
     let score = dropLines.length * dropLines.length * this.curRaund
     let curScore = parseInt(document.querySelector('#score').innerHTML)
     document.querySelector('#score').innerHTML = curScore + score
-    // score indication
-
     let linesMap = this.createLinesMap()
 
     for (let line of dropLines)
@@ -606,8 +594,6 @@ class Application {
     setTimeout(() => {
       for (let index in this.removePoll) {
         this.removePoll[index].curElement.remove()
-        // this.display.layers.front.removeSprite(index)
-
       }
       this.removePoll = {}
     }, 300)
@@ -661,8 +647,8 @@ class Application {
       }
   
       if (this.checkGameOver()) {
-        clearInterval(this.calculateInterval);
-        document.querySelector('#menu6').style.opacity = 1;
+        clearInterval(this.calculateInterval)
+        document.querySelector('#menu6').style.opacity = 1
       } else {
         this.startRaund()
       }
@@ -670,35 +656,33 @@ class Application {
   }
   
   createGameContainer() {
-    const gameContainer = document.createElement('div');
-    gameContainer.id = 'game-container';
-    document.body.appendChild(gameContainer);
+    const gameContainer = document.createElement('div')
+    gameContainer.id = 'game-container'
+    document.body.appendChild(gameContainer)
   }
 
   reset() {
-    clearInterval(this.calculateInterval);
+    clearInterval(this.calculateInterval)
   
-    this.freezeIndex = 0;
-    this.removePoll = {};
-    this.paused = true;
-    this.score = 0;
-    this.curRaund = 0;
-    document.querySelector('#score').innerHTML = this.score;
+    this.freezeIndex = 0
+    this.removePoll = {}
+    this.paused = true
+    this.score = 0
+    this.curRaund = 0
+    document.querySelector("#score").innerHTML = this.score
   
-    document.querySelector('#menu6').style.opacity = 0;
+    document.querySelector("#menu6").style.opacity = 0
   
-    // Remove current active piece
     if (this.curFigure) {
       for (let key in this.curFigure.sprites) {
         this.curFigure.sprites[key].options.opacity = 0
       }
     }
 
-    // Remove all freezedSprites
     for (let key in this.freezedSprites) {
-      console.log(this.freezedSprites[key]);
+      console.log(this.freezedSprites[key])
       this.freezedSprites[key].options.opacity = 0
-      this.display.layers.front.removeSprite(key);
+      this.display.layers.front.removeSprite(key)
     }
 
     this.freezedSprites = {}
@@ -712,7 +696,7 @@ class Application {
 document.addEventListener("keydown", function (e) {
   
   if (e.key === "Enter" && !window.app) {
-  document.querySelector('#menu5').style.opacity = 0
+  document.querySelector("#menu5").style.opacity = 0
   window.app = new Application()
   app.startRaund()
   }
