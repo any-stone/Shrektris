@@ -70,7 +70,7 @@ class Layer {
   }
 
   removeSprite(spriteId) {
-    this.sprites[spriteId].curElement.remove()
+    // this.sprites[spriteId].curElement.remove()
     delete (this.sprites[spriteId])
   }
 
@@ -124,7 +124,7 @@ class Display {
   }
 
   removeLayer(layerId) {
-    this.layers[layerId].curElement.remove()
+    // this.layers[layerId].curElement.remove()
     delete (this.layers[layerId])
   }
 
@@ -471,10 +471,8 @@ class Application {
     this.createGameContainer()
 
     // Add event listener to reset button
-    // Add event listener to reset button
     const resetButton = document.querySelector('#reset');
     resetButton.addEventListener('click', () => this.reset());
-
   }
 
 
@@ -519,10 +517,8 @@ class Application {
 
   startRaund() {
     this.curRaund++
-
     // speed indication
     document.querySelector('#speed').innerHTML = 1000 - this.calcSpeed(this.curRaund)
-    // speed indication
 
     const startLeft = parseInt(this.tetrisWidth / 2) * 30
     const startTop = 30
@@ -585,7 +581,6 @@ class Application {
   }
 
   moveDown(dropLines) {
-
     // score indication
     let score = dropLines.length * dropLines.length * this.curRaund
     let curScore = parseInt(document.querySelector('#score').innerHTML)
@@ -610,8 +605,8 @@ class Application {
 
     setTimeout(() => {
       for (let index in this.removePoll) {
-        //this.removePoll[index].curElement.remove()
-        this.display.layers.front.removeSprite(index)
+        this.removePoll[index].curElement.remove()
+        // this.display.layers.front.removeSprite(index)
 
       }
       this.removePoll = {}
@@ -696,48 +691,49 @@ class Application {
     gameContainer.id = 'game-container';
     document.body.appendChild(gameContainer);
   }
+
   reset() {
     clearInterval(this.calculateInterval);
   
-    // Remove current active piece
-    if (this.curFigure) {
-      for (let key in this.curFigure.sprites) {
-        this.display.layers.front.removeSprite(key);
-      }
-    }
-  
-    // Remove all freezedSprites
-    for (let index in this.freezedSprites) {
-      this.display.layers.front.removeSprite(index);
-    }
-  
-    this.freezedSprites = {};
     this.freezeIndex = 0;
     this.removePoll = {};
-    this.paused = false;
+    this.paused = true;
     this.score = 0;
-    document.querySelector('#score').innerHTML = this.score;
     this.curRaund = 0;
-    document.querySelector('#speed').innerHTML = 1000 - this.calcSpeed(this.curRaund);
+    document.querySelector('#score').innerHTML = this.score;
   
     const gameOverMessage = document.getElementById('game-over-message');
     if (gameOverMessage) {
       gameOverMessage.remove();
     }
-  
-    this.startRaund(); // start a new round
-    this.calculateInterval = setInterval(() => { // set up the game interval
-      this.tick();
-    }, this.calcSpeed(this.curRaund));
-  
+
+    // Remove current active piece
+    if (this.curFigure) {
+      for (let key in this.curFigure.sprites) {
+        this.curFigure.sprites[key].options.opacity = 0
+      }
+    }
+
+    // Remove all freezedSprites
+    for (let key in this.freezedSprites) {
+      console.log(this.freezedSprites[key]);
+      this.freezedSprites[key].options.opacity = 0
+      this.display.layers.front.removeSprite(key);
+    }
+
+    this.freezedSprites = {}
+    // start a new round
     this.display.render();
+    this.startRaund();
+    this.pause();
   }
 
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const app = new Application();
+document.addEventListener('keydown', function (e) {
+  if (e.key === "Enter" && !window.app) {
+  window.app = new Application();
   app.startRaund();
-
+  }
 });
 

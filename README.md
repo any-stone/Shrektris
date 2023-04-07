@@ -1,4 +1,4 @@
-![Ugly Tetris](/src/uglyTetris.png)
+![Ugly Tetris](/src/uglyTetrisScreenshor.png)
 
 ## [PRESS HERE TO PLAY](https://shrektris.netlify.app/) ##
 
@@ -11,6 +11,7 @@ The following external resources were used in the development of this applicatio
 * [FreeCodeCamp](https://www.freecodecamp.org/)
 * [Google Fonts](https://fonts.google.com/)
 * [Github](https://www.github.com)
+* [Flaticon](https://www.flaticon.com/)
 
 ## Technologies Used
 The following technologies were used in the development of this application:
