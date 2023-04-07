@@ -649,23 +649,6 @@ class Application {
     }
   }
 
-  showGameOverMessage() {
-    const existingGameOverMessage = document.getElementById('game-over-message');
-    if (existingGameOverMessage) {
-      return;
-    }
-
-    const gameOverMessage = document.createElement('div');
-    gameOverMessage.id = 'game-over-message';
-
-    const message = document.createElement('h1');
-    message.textContent = 'The game is over';
-    gameOverMessage.appendChild(message);
-
-    const gameContainer = document.getElementById('game-container');
-    gameContainer.appendChild(gameOverMessage);
-  }
-
   tick() {
     if (this.paused) {
       return;
@@ -679,7 +662,7 @@ class Application {
   
       if (this.checkGameOver()) {
         clearInterval(this.calculateInterval);
-        this.showGameOverMessage(); // Show the game over message instead of alert
+        document.querySelector('#menu6').style.opacity = 1;
       } else {
         this.startRaund()
       }
@@ -702,11 +685,8 @@ class Application {
     this.curRaund = 0;
     document.querySelector('#score').innerHTML = this.score;
   
-    const gameOverMessage = document.getElementById('game-over-message');
-    if (gameOverMessage) {
-      gameOverMessage.remove();
-    }
-
+    document.querySelector('#menu6').style.opacity = 0;
+  
     // Remove current active piece
     if (this.curFigure) {
       for (let key in this.curFigure.sprites) {
@@ -722,18 +702,19 @@ class Application {
     }
 
     this.freezedSprites = {}
-    // start a new round
-    this.display.render();
-    this.startRaund();
-    this.pause();
+    this.display.render()
+    this.startRaund()
+    this.pause()
   }
 
 }
 
-document.addEventListener('keydown', function (e) {
+document.addEventListener("keydown", function (e) {
+  
   if (e.key === "Enter" && !window.app) {
-  window.app = new Application();
-  app.startRaund();
+  document.querySelector('#menu5').style.opacity = 0
+  window.app = new Application()
+  app.startRaund()
   }
-});
+})
 
